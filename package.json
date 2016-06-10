@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/pedroscaff/analises_dados_tse.git"
+    "url": "git+https://github.com/pedrin1001/analise_dados_gov.git"
   },
   "author": "Pedro Scaff",
   "license": "ISC",
@@ -20,5 +20,9 @@
     "d3": "^3.5.17",
     "fast-csv": "^2.0.0",
     "minimist": "^1.2.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/pedrin1001/analise_dados_gov/issues"
+  },
+  "dependencies": {}
 }
