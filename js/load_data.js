@@ -24,7 +24,7 @@ function save_data_bens_2010 (d) {
     draw(dados_candidatos, bens_candidatos, bens_candidatos_2010);
 }
 
-d3.csv('../dados/bens/consulta_cand_2014_MG.csv', (d) => {
+d3.csv('../dados/consulta_cand_2014_MG.csv', (d) => {
     d['cod_sit_tot_turno'] = +d['cod_sit_tot_turno'];
     return d;
 }, save_data_cand);

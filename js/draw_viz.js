@@ -28,7 +28,8 @@ let draw = (dados_candidatos, bens_candidatos) => {
         .entries(dados_candidatos);
 
     function filter_eleitos (d, eleitos) {
-        if (d.values[0]['cod_sit_tot_turno'] >= 1 && d.values[0]['cod_sit_tot_turno'] <= 3) {
+        if (d.values[0]['cod_sit_tot_turno'] >= 1 &&
+            d.values[0]['cod_sit_tot_turno'] <= 3) {
             return eleitos;
         } else {
             return !eleitos;
@@ -61,59 +62,63 @@ let draw = (dados_candidatos, bens_candidatos) => {
         .rollup(get_total_bens_party)
         .entries(dados_candidatos);
 
-    console.log(nested_parties);
-
-
-    let candidatos_eleitos = nested_candidatos.filter((d) => filter_eleitos(d, true));
+    let candidatos_eleitos = nested_candidatos.filter(
+        (d) => filter_eleitos(d, true)
+    );
 
     candidatos_eleitos.forEach((d) => {
         d.total_bens = get_total_bens(d['key']);
     });
 
-    let sorted = candidatos_eleitos.sort((a, b) => b['total_bens'] - a['total_bens']);
+    candidatos_eleitos.sort(
+        (a, b) => b['total_bens'] - a['total_bens']
+    );
 
-    let sorted_parties = nested_parties.sort((a, b) => b.values['total_bens'] - a.values['total_bens']);
-    // let sorted_parties = nested_parties.sort((a, b) => b.values['total_candidatos_eleitos'] - a.values['total_candidatos_eleitos']);
-
+    nested_parties.sort((a, b) =>
+        b.values['total_candidatos_eleitos'] - a.values['total_candidatos_eleitos']
+    );
 
     let line_scale = d3.scale.pow().exponent(0.5)
         .range([50, 700])
-        .domain(d3.extent(sorted, (d) => d['total_bens']));
+        .domain(d3.extent(nested_parties, (d) => d.values['total_bens']));
 
     let line_scale2 = d3.scale.pow().exponent(0.5)
         .range([50, 700])
-        .domain(d3.extent(sorted_parties, (d) => d.values['total_bens']));
+        .domain(d3.extent(
+            nested_parties, (d) => d.values['total_candidatos_eleitos']
+        ));
 
     let line_y = d3.scale.linear()
         .range([50, 700])
         .domain([0, 11]);
 
     svg.selectAll('line')
-        .data(sorted_parties.slice(0, 10))
+        .data(nested_parties.slice(0, 10))
         .enter()
         .append('line')
         .attr('stroke-width', 2)
-        .attr('x1', 50)
-        .attr('x2', (d) => line_scale2(d.values['total_bens']))
+        .attr('x1', 70)
+        .attr('x2', (d) => line_scale2(d.values['total_candidatos_eleitos']))
         .attr('y1', (d, i) => line_y(i))
         .attr('y2', (d, i) => line_y(i))
         .attr('style', 'stroke: black')
         .attr('id', (d, i) => 'line-' + i);
 
     svg.selectAll('text')
-        .data(sorted_parties.slice(0, 15))
+        .data(nested_parties.slice(0, 10))
         .enter()
         .append('text')
-        .attr('x', (d) => line_scale2(d.values['total_bens']) + 20)
+        // .attr('x', (d) => line_scale2(d.values['total_candidatos_eleitos']) + 20)
+        .attr('x', (d) => 0)
         .attr('y', (d, i) => line_y(i))
-        .text((d) => d['key'] + ' - ' + d.values['total_bens'].toFixed(2));
+        .text((d) => d['key'] + ' - ' + d.values['total_candidatos_eleitos'].toFixed(2));
 
     // setTimeout(() => {
     //     svg.selectAll('line')
     //         // .enter()
     //         .transition()
     //         .duration(500)
-    //         .attr('x2', (d) => line_scale2(d['total_bens']));
+    //         .attr('x2', (d) => line_scale(d['total_bens']));
     // }, 2000);
 
 }

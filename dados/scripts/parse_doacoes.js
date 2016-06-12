@@ -66,7 +66,7 @@ let csvStream = csv
     .on("end", function () {
         parsedCsv.sort((a, b) => b['Valor'] >= a['Valor'] ? 1 : -1);
         csv.writeToPath(
-            dest, parsedCsv.slice(1, parsedCsv.length), {headers: true}
+            dest, parsedCsv.slice(1), {headers: true}
         )
         .on("finish", function(){
             console.log(colors.green.bold(`parsed csv saved to ${dest}`));
