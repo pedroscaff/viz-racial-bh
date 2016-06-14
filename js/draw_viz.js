@@ -8,9 +8,9 @@ let draw = (dados_candidatos, bens_candidatos) => {
     let svg = d3.select('body')
         .append('svg')
             .attr('width', width + margin)
-            .attr('height', height + margin)
-        .append('g')
-            .attr('class', 'chart');
+            .attr('height', height + margin);
+    let group1 = svg.append('g').attr('class', 'chart');
+    let group2 = svg.append('g').attr('class', 'chart');
 
     function get_total_bens (key) {
         let sum = d3.sum(bens_candidatos, (d) => {
@@ -51,7 +51,7 @@ let draw = (dados_candidatos, bens_candidatos) => {
         });
         let cand_eleitos = leaves.filter((d) => filter_eleitos_party(d, true));
         return {
-            'total_bens': sum,
+            'total_bens': sum.toFixed(0),
             'total_candidatos': leaves.length,
             'total_candidatos_eleitos': cand_eleitos.length
         }
@@ -75,43 +75,106 @@ let draw = (dados_candidatos, bens_candidatos) => {
     );
 
     nested_parties.sort((a, b) =>
-        b.values['total_candidatos_eleitos'] - a.values['total_candidatos_eleitos']
+        b.values['total_candidatos_eleitos'] -
+        a.values['total_candidatos_eleitos']
     );
 
-    let line_scale = d3.scale.pow().exponent(0.5)
-        .range([50, 700])
-        .domain(d3.extent(nested_parties, (d) => d.values['total_bens']));
 
-    let line_scale2 = d3.scale.pow().exponent(0.5)
-        .range([50, 700])
-        .domain(d3.extent(
-            nested_parties, (d) => d.values['total_candidatos_eleitos']
-        ));
 
-    let line_y = d3.scale.linear()
+    let scale_percent = d3.scale.pow().exponent(0.5)
+        .range([1400 - margin, 700])
+        .domain([0, 1]);
+
+    let scale_eleitos = d3.scale.pow().exponent(0.5)
+        .range([70, 700])
+        .domain([0, d3.max(nested_parties.slice(0, 10), (d) =>
+            d.values['total_candidatos_eleitos'])
+        ]);
+
+    let scale_y = d3.scale.linear()
         .range([50, 700])
         .domain([0, 11]);
 
-    svg.selectAll('line')
+    function handleInterruption () {
+
+    }
+
+    function mouseOverEvent () {
+        let id = 'mouse-line' + this.getAttribute('id');
+        group1.selectAll('*').interrupt(id)
+            .selectAll('*').interrupt(id);
+        let x = Number(this.getAttribute('width')) +
+                Number(this.getAttribute('x'));
+        console.log(x);
+        group1.append('line')
+            .attr('id', id)
+            .attr('x1', x)
+            .attr('x2', x)
+            .attr('y1', Number(this.getAttribute('y')) + 20)
+            .attr('y2', Number(this.getAttribute('y')) + 20)
+            .attr('stroke-width', 2)
+            .attr('style', 'stroke: black')
+            .style('stroke-dasharray', ('3, 3'))
+            .transition(id)
+            .duration(500)
+            .attr('y2', 700);
+    }
+
+    function mouseOutEvent () {
+        let id = 'mouse-line' + this.getAttribute('id');
+        group1.selectAll('*').interrupt(id)
+            .selectAll('*').interrupt(id);
+        group1.selectAll('#' + id)
+            .transition()
+            .each('end', () => {
+                group1.selectAll('#' + id)
+                    .remove();
+            })
+            .duration(250)
+            .attr('y2', Number(this.getAttribute('y')) + 20);
+    }
+
+    let total_lines = group1.selectAll('rect')
+        .data(nested_parties.slice(0, 10))
+        .enter()
+        .append('rect')
+            .attr('x', 70)
+            .attr('y', (d, i) => scale_y(i) - 20)
+            .attr('width', (d) =>
+                scale_eleitos(d.values['total_candidatos_eleitos'])
+            )
+            .style('fill', 'blue')
+            .attr('height', 30)
+            .attr('id', (d, i) => 'rect-' + i);
+
+    total_lines.on('mouseover', mouseOverEvent);
+    total_lines.on('mouseout', mouseOutEvent);
+
+    group1.selectAll('text')
+        .data(nested_parties.slice(0, 10))
+        .enter()
+        .append('text')
+        .attr('x', (d) => 0)
+        .attr('y', (d, i) => scale_y(i))
+        .text((d) => d['key']);
+
+    function ratio_eleitos (party) {
+        let ratio =
+            party['total_candidatos_eleitos'] / party['total_candidatos'];
+        return scale_percent(ratio.toFixed(2));
+    }
+
+    group2.selectAll('line')
         .data(nested_parties.slice(0, 10))
         .enter()
         .append('line')
         .attr('stroke-width', 2)
-        .attr('x1', 70)
-        .attr('x2', (d) => line_scale2(d.values['total_candidatos_eleitos']))
-        .attr('y1', (d, i) => line_y(i))
-        .attr('y2', (d, i) => line_y(i))
-        .attr('style', 'stroke: black')
-        .attr('id', (d, i) => 'line-' + i);
+        .attr('x1', 1400 - margin)
+        .attr('x2', (d) => ratio_eleitos(d.values))
+        .attr('y1', (d, i) => scale_y(i))
+        .attr('y2', (d, i) => scale_y(i))
+        .attr('style', 'stroke: black');
 
-    svg.selectAll('text')
-        .data(nested_parties.slice(0, 10))
-        .enter()
-        .append('text')
-        // .attr('x', (d) => line_scale2(d.values['total_candidatos_eleitos']) + 20)
-        .attr('x', (d) => 0)
-        .attr('y', (d, i) => line_y(i))
-        .text((d) => d['key'] + ' - ' + d.values['total_candidatos_eleitos'].toFixed(2));
 
     // setTimeout(() => {
     //     svg.selectAll('line')
