@@ -1,0 +1,21 @@
+{
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+    "env": {
+        "node": true,
+        "commonjs": true,
+        "mocha": true,
+        "es6": true,
+        "browser": true
+    },
+    "rules": {
+        "no-console": 0,
+        "strict": 2
+    },
+    "globals": {
+        "H"
+    }
+}

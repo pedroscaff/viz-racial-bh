@@ -1,0 +1,28 @@
+{
+  "name": "analise-raca-bh",
+  "version": "1.0.0",
+  "description": "Showing Belo Horizonte Racial distribution",
+  "main": "index.js",
+  "scripts": {
+    "start": "lens start",
+    "export": "lens export"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com:pedroscaff/analise_dados_gov.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "d3-array": "^1.1.1",
+    "d3-dsv": "^1.0.5",
+    "d3-format": "^1.1.1",
+    "d3-scale": "^1.0.5",
+    "xhr": "^2.4.0"
+  },
+  "config": {
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.0"
+  }
+}
