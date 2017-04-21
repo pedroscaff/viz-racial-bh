@@ -8,34 +8,16 @@ body {
     top: 0;
     bottom: 0;
     width: 100%;
+    height: 400px;
 }
 
-.dl-color-legend__labels > div {
-    width: 40px;
+#root {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 220px;
+    height: 150px;
+    background-color: rgba(31, 38, 42, 0.8);
+    display: flex;
+    flex-direction: column;
 }
-
-.gdp-info-bubble {
-    opacity: 0.75;
-    padding: 0 5px;
-    pointer-events: none;
-}
-
-.gdp-info-bubble .gdp-info-bubble-title {
-    font-size: 15px;
-    margin-left: 2px;
-}
-
-.gdp-info-bubble .gdp-info-bubble-label {
-    font-size: 10px;
-    opacity: 0.7;
-    margin-left: 2px;
-}
-
-.gdp-info-bubble .H_ib_close {
-    display: none;
-}
-
-.gdp-info-bubble .H_ib_body {
-    padding: 0;
-}
-

@@ -1,12 +1,5 @@
 {
-    "app_id": "DemoAppId01082013GAL",
-    "app_code": "AJKnXv84fjrb0KIHawS0Tg",
-    "host": "cit.datalens.api.here.com",
-    "queries": {
-        "Query": {
-            "fileName": "query.json",
-            "dataset": "b04aa623919845d48c61b2a1d1d9d3ce",
-            "id": "e69052fa0f424db58749c61be313aa0a"
-        }
-    }
+    "app_id": "in2pu7pura4wetagevAb",
+    "app_code": "py5JthxGeTnFXDNPQEIiRA",
+    "host": "cit.datalens.api.here.com"
 }

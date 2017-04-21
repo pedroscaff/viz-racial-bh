@@ -1,0 +1,9 @@
+.legendItem {
+    padding-top: 4px;
+}
+
+.legendItem > * {
+    fill: white;
+    text-align: center;
+    font-size: 12px;
+}
